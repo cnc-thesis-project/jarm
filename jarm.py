@@ -28,6 +28,7 @@ group.add_argument("scan", nargs='?', help="Enter an IP or domain to scan.")
 group.add_argument("-i", "--input", help="Provide a list of IP addresses or domains to scan, one domain or IP address per line.  Optional: Specify port to scan with comma separation (e.g. 8.8.4.4,853).", type=str)
 parser.add_argument("-p", "--port", help="Enter a port to scan (default 443).", type=int)
 parser.add_argument("-v", "--verbose", help="Verbose mode: displays the JARM results before being hashed.", action="store_true")
+parser.add_argument("-s", "--simple", help="Only print the hash.", action="store_true")
 parser.add_argument("-V", "--version", help="Print out version and exit.", action="store_true")
 parser.add_argument("-o", "--output", help="Provide a filename to output/append results to a CSV file.", type=str)
 args = parser.parse_args()
@@ -492,14 +493,17 @@ def main():
         file.write("\n")
     #Print to STDOUT
     else:
-        if ip != None:
-            print("Domain: " + destination_host)
-            print("Resolved IP: " + ip)
-            print("JARM: " + result)
+        if args.simple:
+            print(result)
         else:
-            print("Domain: " + destination_host)
-            print("Resolved IP: IP failed to resolve.")
-            print("JARM: " + result)
+            if ip != None:
+                print("Domain: " + destination_host)
+                print("Resolved IP: " + ip)
+                print("JARM: " + result)
+            else:
+                print("Domain: " + destination_host)
+                print("Resolved IP: IP failed to resolve.")
+                print("JARM: " + result)
         #Verbose mode adds pre-fuzzy-hashed JARM
         if args.verbose:
             scan_count = 1
